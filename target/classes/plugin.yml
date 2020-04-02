@@ -1,0 +1,15 @@
+name: HardCoreRecode
+version: 8.0-Alpha
+main: me.advancedmical.hardcorerecode.Main
+api-version: 1.13
+depend: [Vault, CMI, CMIEInjector]
+authors: [Mical]
+description: HardCore Plugin
+website: www.advanced-mical.icu
+loadbefore: [Vault, CMIEInjector, CMI]
+commands:
+  hardcore:
+    description: "重生系统总命令"
+    usage: /hardcore help
+    permission: hardcore.use
+    permission-message: "§8[§a重生§8] §c您没有权限这么做."

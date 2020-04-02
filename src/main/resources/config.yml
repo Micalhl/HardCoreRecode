@@ -1,0 +1,13 @@
+newPlayerProtectNum: 5
+takeNum: 200.0
+deadCommand: gamemode %player% survival
+InventoryName: '&6&l重生系统使用帮助'
+InventoryFrameName: '&9&l我只是一个普普通通的边框,嗷呜~(bushi)'
+Lang1: '&8[&a重生&8] &a欢迎你来到方块世界，系统已增送你&3{0}&a次无损死亡机会,请珍惜!'
+Lang2: '&8[&a重生&8] &a准备复活中...请等待三秒,将花费&3{0}&a金币.'
+Lang3: '&8[&a重生&8] &a重生剩余时间: &3{0}&a.'
+Lang4: '&8[&a重生&8] &a重生剩余时间: &3{0}&a.'
+Lang5: '&8[&a重生&8] &a你已成功复活,当前剩余无损复活次数: &3{0}&a.'
+Lang6: '&8[&a重生&8] &c很抱歉,你不能复活,你只有&3{0}&c金币.'
+Lang7: '&8[&a重生&8] &a插件已重载.'
+Lang8: '&8[&a重生&8] &c您没有权限这么做.'
