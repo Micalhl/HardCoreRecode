@@ -145,16 +145,11 @@ public class Main extends JavaPlugin implements Listener {
                 helpMsg(sender);
                 return true;
             }
-            if (args[0].equalsIgnoreCase("buy")){
-                if (args[1].equalsIgnoreCase("1")){
-                    if (sender.hasPermission("hardcore.buy")){
+            if (args[0].equalsIgnoreCase("add")){
+                if (args[1].equalsIgnoreCase("add")){
+                    if (sender.hasPermission("hardcore.buy")) {
                         Player p = (Player) sender;
-                        econ.withdrawPlayer(p.getPlayer(), getConfig().getDouble("takeNum"));
-                        if (econ.getBalance(p.getPlayer()) < 200){
-                            p.sendMessage(this.getConfig().getString("Lang9"));
-                        } else {
-                            String.valueOf(this.getConfig().getInt(p.getName()) + 1);
-                        }
+                        String.valueOf(this.getConfig().getInt(p.getName()) + 1);
                         return true;
                     }
                 }
