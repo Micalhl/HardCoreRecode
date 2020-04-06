@@ -155,6 +155,7 @@ public class Main extends JavaPlugin implements Listener {
                         } else {
                             String.valueOf(this.getConfig().getInt(p.getName()) + 1);
                         }
+                        return true;
                     }
                 }
             }
