@@ -90,7 +90,7 @@ public class Main extends JavaPlugin implements Listener {
                     time--;
                     if (time == 0) {
                         double eco = econ.getBalance(p);
-                        if (econ.getBalance(p.getPlayer()) < 200) {
+                        if (econ.getBalance(p.getPlayer()) < getConfig().getInt("takeNum")) {
                             p.sendMessage(getConfig().getString("Lang6").replace("{0}", String.valueOf(econ.getBalance(p.getPlayer()))).replace("&", "§"));
                             cancel();
                         } else {
@@ -152,7 +152,7 @@ public class Main extends JavaPlugin implements Listener {
     public void helpMsg(CommandSender sender){
         Player player = (Player)sender;
         player.sendMessage("§7--------[§1§l重生系统§a使用帮助§7]--------");
-        player.sendMessage("  §7注:重生时请确保你的金钱§c§l>200§7,否则重生§c§l可能失败§7.");
+        player.sendMessage("  §7注:重生时请确保你的金钱§c§l>" + getConfig().getInt("takeNum") + "§7,否则重生§c§l可能失败§7.");
         player.sendMessage("  §5/hardcore help §1--- §7显示使用帮助.");
         player.sendMessage("  §5/hardcore reload §1--- §7重载插件.");
         player.sendMessage("§7----------------------------------------");

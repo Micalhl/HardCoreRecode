@@ -1,5 +1,5 @@
 name: HardCoreRecode
-version: 10.0.0.0-Alpha
+version: 10.0.1.0-Release
 main: me.advancedmical.hardcorerecode.Main
 api-version: 1.13
 depend: [Vault, CMI, CMIEInjector]
@@ -13,5 +13,3 @@ commands:
     usage: /hardcore help
     permission: hardcore.use
     permission-message: "§8[§a重生§8] §c您没有权限这么做."
-  hcadd:
-    description: "1"
