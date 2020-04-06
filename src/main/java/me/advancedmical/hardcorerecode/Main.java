@@ -1,33 +1,18 @@
 package me.advancedmical.hardcorerecode;
-import com.google.common.collect.Multimap;
 import net.milkbowl.vault.economy.Economy;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
-import org.bukkit.Material;
 import org.bukkit.OfflinePlayer;
-import org.bukkit.attribute.Attribute;
-import org.bukkit.attribute.AttributeModifier;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.inventory.InventoryClickEvent;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
-import org.bukkit.inventory.EquipmentSlot;
-import org.bukkit.inventory.Inventory;
-import org.bukkit.inventory.ItemFlag;
-import org.bukkit.inventory.ItemStack;
-import org.bukkit.inventory.meta.ItemMeta;
-import org.bukkit.inventory.meta.tags.CustomItemTagContainer;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-
-import java.util.*;
 
 public class Main extends JavaPlugin implements Listener {
     static Economy econ = null;
@@ -159,6 +144,19 @@ public class Main extends JavaPlugin implements Listener {
             } else {
                 helpMsg(sender);
                 return true;
+            }
+            if (args[0].equalsIgnoreCase("buy")){
+                if (args[1].equalsIgnoreCase("1")){
+                    if (sender.hasPermission("hardcore.buy")){
+                        Player p = (Player) sender;
+                        econ.withdrawPlayer(p.getPlayer(), getConfig().getDouble("takeNum"));
+                        if (econ.getBalance(p.getPlayer()) < 200){
+                            p.sendMessage(this.getConfig().getString("Lang9"));
+                        } else {
+                            String.valueOf(this.getConfig().getInt(p.getName()) + 1);
+                        }
+                    }
+                }
             }
         }
         return false;

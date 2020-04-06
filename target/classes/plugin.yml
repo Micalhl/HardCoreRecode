@@ -1,5 +1,5 @@
 name: HardCoreRecode
-version: 8.0-Alpha
+version: 10.0.0.0-Alpha
 main: me.advancedmical.hardcorerecode.Main
 api-version: 1.13
 depend: [Vault, CMI, CMIEInjector]
