@@ -145,16 +145,7 @@ public class Main extends JavaPlugin implements Listener {
                 helpMsg(sender);
                 return true;
             }
-            if (args[0].equalsIgnoreCase("add")){
-                if (args[1].equalsIgnoreCase("add")){
-                    if (sender.hasPermission("hardcore.buy")) {
-                        Player p = (Player) sender;
-                        String.valueOf(this.getConfig().getInt(p.getName()) + 1);
-                        return true;
-                    }
-                }
             }
-        }
         return false;
     }
 
