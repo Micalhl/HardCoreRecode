@@ -6,7 +6,7 @@
 
     <groupId>me.advancedmical</groupId>
     <artifactId>HardCoreRecode</artifactId>
-    <version>10.1.0.0-Release</version>
+    <version>12.0.0.0-Release</version>
     <packaging>jar</packaging>
 
     <name>HardCoreRecode</name>
@@ -64,6 +64,10 @@
             <id>vault-repo</id>
             <url>http://nexus.hc.to/content/repositories/pub_releases</url>
         </repository>
+        <repository>
+            <id>placeholderapi</id>
+            <url>http://repo.extendedclip.com/content/repositories/placeholderapi</url>
+        </repository>
     </repositories>
 
     <dependencies>
@@ -71,6 +75,12 @@
             <groupId>org.bukkit</groupId>
             <artifactId>bukkit</artifactId>
             <version>1.13.2-R0.1-SNAPSHOT</version>
+            <scope>provided</scope>
+        </dependency>
+        <dependency>
+            <groupId>me.clip</groupId>
+            <artifactId>placeholderapi</artifactId>
+            <version>2.9.2</version>
             <scope>provided</scope>
         </dependency>
         <dependency>

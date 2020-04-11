@@ -1,9 +1,10 @@
 name: HardCoreRecode
-version: 10.1.0.0-Release
+version: 12.0.0.0-Release
 main: me.advancedmical.hardcorerecode.Main
 api-version: 1.13
 depend: [Vault, CMI, CMIEInjector]
-authors: [Mical]
+softdepend: [PlaceHolderAPI]
+authors: [BlueDog, Mical]
 description: HardCore Plugin
 website: www.advanced-mical.icu
 loadbefore: [Vault, CMIEInjector, CMI]

@@ -7,27 +7,20 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.file.YamlConfiguration;
 import org.bukkit.entity.Player;
-import org.bukkit.event.Event;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.Listener;
-import org.bukkit.event.player.PlayerEvent;
 import org.bukkit.event.player.PlayerJoinEvent;
 import org.bukkit.event.player.PlayerQuitEvent;
 import org.bukkit.event.player.PlayerRespawnEvent;
 import org.bukkit.plugin.RegisteredServiceProvider;
 import org.bukkit.plugin.java.JavaPlugin;
 import org.bukkit.scheduler.BukkitRunnable;
-import org.yaml.snakeyaml.Yaml;
-import sun.util.resources.cldr.zh.CalendarData_zh_Hans_HK;
 
+import javax.security.sasl.SaslServer;
 import java.io.File;
-import java.io.IOException;
-import java.util.HashMap;
-import java.util.WeakHashMap;
-
 public class Main extends JavaPlugin implements Listener {
-    public static HashMap<String,String> HashMap = new HashMap();
     static Economy econ = null;
+    public String prefix = "§6§l复活币系统§9§l>>>";
     @Override
     public void onLoad() {
         getLogger().info("§a正在加载HardCoreRecode，版本：§3" + getDescription().getVersion());
@@ -70,15 +63,21 @@ public class Main extends JavaPlugin implements Listener {
         RegisteredServiceProvider<Economy> rsp = Bukkit.getServer().getServicesManager().getRegistration(Economy.class);
         econ = rsp.getProvider();
         getLogger().info("§a成功开启模块：§3经济");
-        getLogger().info("§a加载完成，作者Mical，本插件仅用于方块世界服务器内部使用！");
-        file= new File(this.getDataFolder(), "\\playernewdata\\data.yml");
+        getLogger().info("§a加载完成");
+        file= new File(this.getDataFolder(), "\\playerdata\\data.yml");
         yaml=YamlConfiguration.loadConfiguration(file);
         try {
             yaml.save(file);
         } catch (Exception e){
             e.printStackTrace();
         }
+        load();
     }
+
+    protected void load(){
+        PlaceHolder.hook();
+    }
+
     @EventHandler
     public void Join(PlayerJoinEvent e){
         Player player = e.getPlayer();
@@ -87,7 +86,7 @@ public class Main extends JavaPlugin implements Listener {
             @Override
             public void run() {
                 Player player = e.getPlayer();
-                String toString = yaml.getString(String.valueOf(player.getUniqueId()));
+                String toString = yaml.getString(player.getUniqueId() + "-gm");
                 player.setGameMode(GameMode.valueOf(toString==null?"SURVIVAL":toString));
                 cancel();
             }
@@ -96,7 +95,7 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void Quit(PlayerQuitEvent e){
         Player player = e.getPlayer();
-        yaml.set(String.valueOf(player.getUniqueId()),player.getGameMode().toString());
+        yaml.set(player.getUniqueId() + "-gm",player.getGameMode().toString());
         try {
             yaml.save(file);
         } catch (Exception exception){
@@ -106,16 +105,22 @@ public class Main extends JavaPlugin implements Listener {
     @Override
     public void onDisable() {
         getLogger().info("§a插件已卸载");
+        PlaceHolder.unhook();
     }
     @EventHandler
     public void onJoin(PlayerJoinEvent pje) {
-        for (String a : getConfig().getKeys(false)) {
-            if (a.equals(pje.getPlayer().getName())) {
+        Player player = pje.getPlayer();
+        for (String a : yaml.getKeys(false)) {
+            if (a.equals(player.getUniqueId())) {
                 return;
             }
         }
-        getConfig().set(pje.getPlayer().getName(), getConfig().getInt("newPlayerProtectNum"));
-        saveConfig();
+        yaml.set(String.valueOf(player.getUniqueId()), getConfig().getInt("newPlayerProtectNum"));
+        try {
+            yaml.save(file);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         pje.getPlayer().sendMessage(getConfig().getString("Lang1").replace("{0}", String.valueOf(this.getConfig().getString("newPlayerProtectNum"))).replace("&", "§"));
     }
     public static double get(OfflinePlayer player) {
@@ -124,8 +129,7 @@ public class Main extends JavaPlugin implements Listener {
     @EventHandler
     public void onDead(PlayerRespawnEvent pre) {
         Player p = pre.getPlayer();
-        if (getConfig().getInt(p.getName()) == 0) {
-            econ.withdrawPlayer(p.getPlayer(), getConfig().getDouble("takeNum"));
+        if (yaml.getInt(String.valueOf(p.getUniqueId())) == 0) {
             p.sendMessage(getConfig().getString("Lang2").replace("{0}", String.valueOf(this.getConfig().getString("takeNum"))).replace("&", "§"));
             new BukkitRunnable() {
                 int time = 3;
@@ -139,6 +143,7 @@ public class Main extends JavaPlugin implements Listener {
                             p.sendMessage(getConfig().getString("Lang6").replace("{0}", String.valueOf(econ.getBalance(p.getPlayer()))).replace("&", "§"));
                             cancel();
                         } else {
+                            econ.withdrawPlayer(p.getPlayer(), getConfig().getDouble("takeNum"));
                             p.setGameMode(GameMode.SURVIVAL);
                             cancel();
                         }
@@ -146,8 +151,12 @@ public class Main extends JavaPlugin implements Listener {
                 }
             }.runTaskTimer(this, 0, 20L);
         } else {
-            getConfig().set(p.getName(), getConfig().getInt(p.getName()) - 1);
-            saveConfig();
+            yaml.set(String.valueOf(p.getUniqueId()), yaml.getInt(String.valueOf(p.getUniqueId())) - 1);
+            try {
+                yaml.save(file);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }
             new BukkitRunnable() {
                 int time = 3;
                 @Override
@@ -160,9 +169,8 @@ public class Main extends JavaPlugin implements Listener {
                     }
                 }
             }.runTaskTimer(this, 0, 20L);
-            p.sendMessage(this.getConfig().getString("Lang5").replace("{0}", String.valueOf(this.getConfig().getInt(p.getName()))).replace("&", "§"));
+            p.sendMessage(this.getConfig().getString("Lang5").replace("{0}", String.valueOf(yaml.getInt(String.valueOf(p.getUniqueId())))).replace("&", "§"));
         }
-        Bukkit.getServer().dispatchCommand(Bukkit.getServer().getConsoleSender(), getConfig().getString("deadCommand").replace("%player%", p.getName()));
     }
     @Override
     public boolean onCommand(CommandSender sender, Command command, String label, String[] args) {
@@ -202,39 +210,4 @@ public class Main extends JavaPlugin implements Listener {
         player.sendMessage("  §5/hardcore reload §1--- §7重载插件.");
         player.sendMessage("§7----------------------------------------");
     }
-    /*
-    @EventHandler
-    public void onPlayerQuit(PlayerQuitEvent e){
-        Player player = e.getPlayer();
-        player.getGameMode();
-        HashMap.put(player.getName(),String.valueOf(player.getGameMode()));
-        save(e.getPlayer().getName());
-    }
-    @EventHandler
-    public void onPlayerJoin(PlayerJoinEvent e, String playerName){
-        Player player = e.getPlayer();
-        load(e.getPlayer().getName());
-        String string = HashMap.get(playerName);
-        player.setGameMode(GameMode.valueOf(string));
-    }
-    public void save(String playerName){
-        YamlConfiguration data = YamlConfiguration.loadConfiguration(new File(this.getDataFolder() + "\\playerdata\\" + playerName + ".yml"));
-        data.set(playerName, HashMap.get(playerName));
-        try {
-            data.save(new File(this.getDataFolder() + "\\playerdata\\" + playerName + ".yml"));
-        } catch (IOException e){
-            e.printStackTrace();
-        }
-    }
-    public void load(String playerName){
-        File dataFile = new File(this.getDataFolder() + "\\playerdata\\" + playerName + ".yml");
-        if (!dataFile.exists()){
-            HashMap.put(playerName,"SURVIVAL");
-            return;
-        }
-        YamlConfiguration data = YamlConfiguration.loadConfiguration(dataFile);
-        HashMap.put(playerName,String.valueOf(data.get(playerName)));
-    }
-
-     */
 }
